@@ -18,7 +18,12 @@ const LandingPage = () => {
           <div className="text-3xl">
             The human spirit must prevail over technology
           </div>
-          <div className="text-xl">-Albert Einstein</div>
+          <div className="flex flex-row justify-center text-xl relative">
+            -Albert Einstein{" "}
+            <button className="absolute self-center right-1/3">
+              <img src="/bookmark.svg" />
+            </button>
+          </div>
         </div>
         <div className="mt-24">
           <select className="w-64 h-9 bg-white text-black border-none border-custom tags">

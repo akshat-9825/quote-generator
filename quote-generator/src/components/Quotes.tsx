@@ -1,5 +1,7 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useGetRandomQuoteQuery } from "./apiSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { selectCurrentId, setId } from "./quoteSlice";
 
 export const RandomQuote = memo(() => {
   const { data, isLoading, isError } = useGetRandomQuoteQuery(
@@ -8,6 +10,14 @@ export const RandomQuote = memo(() => {
       refetchOnFocus: false,
     }
   );
+
+  const dispatch = useAppDispatch();
+  const currId = useAppSelector(selectCurrentId);
+
+  useEffect(() => {
+    dispatch(setId(5));
+    console.log(currId, "safgfda");
+  }, [currId, dispatch]);
 
   return (
     <div className="flex flex-col text-center p-3 w-3/4 card-background pt-7 pb-7 border-custom h-64 justify-between">

@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: linear-gradient(256deg, #5e2ab2 2.64%, #161e6c 140.46%);
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Poppins;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
-  background: linear-gradient(256deg, #5e2ab2 2.64%, #161e6c 140.46%);
   color: white;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

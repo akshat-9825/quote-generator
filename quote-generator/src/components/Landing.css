@@ -1,0 +1,17 @@
+.card-background {
+  background: #d05252;
+}
+
+.tags {
+  background: #d9d9d9;
+  border: none;
+  padding: 0.44rem;
+}
+
+.tags:focus-visible {
+  outline: 0;
+}
+
+.border-custom {
+  border-radius: 1.875rem;
+}

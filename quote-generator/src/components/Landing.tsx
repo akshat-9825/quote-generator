@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { RandomQuote } from "./Quotes";
 import "./Landing.css";
 
 const LandingPage = () => {
@@ -14,17 +14,7 @@ const LandingPage = () => {
         </Link>
       </div>
       <div className="flex flex-col justify-center items-center">
-        <div className="flex flex-col text-center p-3 w-3/4 card-background pt-7 pb-7 border-custom h-64 justify-between">
-          <div className="text-3xl">
-            The human spirit must prevail over technology
-          </div>
-          <div className="flex flex-row justify-center text-xl relative">
-            -Albert Einstein{" "}
-            <button className="absolute self-center right-1/3">
-              <img src="/bookmark.svg" />
-            </button>
-          </div>
-        </div>
+        <RandomQuote />
         <div className="mt-24">
           <select className="w-64 h-9 bg-white text-black border-none border-custom tags">
             <option value="volvo">Volvo</option>

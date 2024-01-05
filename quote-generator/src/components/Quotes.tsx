@@ -40,7 +40,15 @@ export const RandomQuote = memo(() => {
 
   const setDataInStore = useCallback(
     (data: QuoteType) => {
-      const { _id: id, content, author } = data;
+      const {
+        _id: id,
+        content,
+        author,
+      } = data || {
+        _id: "",
+        content: "",
+        author: "",
+      };
       dispatch(setId(id));
       dispatch(setQuote(content));
       dispatch(setAuthor(author));
@@ -70,7 +78,15 @@ export const RandomQuote = memo(() => {
   }, [currAuthor, currId, currQuote, dispatch]);
 
   const setDataInLocalStorage = useCallback((data: QuoteType) => {
-    const { _id: id, content, author } = data;
+    const {
+      _id: id,
+      content,
+      author,
+    } = data || {
+      _id: "",
+      content: "",
+      author: "",
+    };
     localStorage.setItem("currId", String(id));
     localStorage.setItem("currContent", content);
     localStorage.setItem("currAuthor", author);

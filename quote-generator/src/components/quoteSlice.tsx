@@ -36,7 +36,7 @@ export const quoteSlice = createSlice({
       state.author = action.payload;
     },
     setNewTag: (state, action: PayloadAction<string>) => {
-      state.tags = [...state.tags, action.payload];
+      state.tags = [action.payload];
     },
     setForceRefetch: (state, action: PayloadAction<boolean>) => {
       state.forceRefetch = action.payload;

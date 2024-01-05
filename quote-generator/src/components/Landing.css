@@ -12,6 +12,6 @@
   outline: 0;
 }
 
-.border-custom {
+.border-custom.border-custom {
   border-radius: 1.875rem;
 }

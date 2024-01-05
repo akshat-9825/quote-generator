@@ -11,7 +11,7 @@ export const BookmarksContent = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-12">
+    <div className="flex flex-col justify-center items-center gap-12 mb-10">
       {bookmarks.map(
         (
           { author, content }: { author: string; content: string },

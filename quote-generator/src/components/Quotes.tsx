@@ -127,7 +127,7 @@ export const RandomQuote = memo(() => {
   ]);
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center w-full">
       <QuoteCard
         isError={isError}
         isLoading={isLoading}

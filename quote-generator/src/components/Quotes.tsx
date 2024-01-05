@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useGetRandomQuoteQuery } from "./apiSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
@@ -18,9 +18,11 @@ export const RandomQuote = memo(() => {
   const currAuthor = useAppSelector(selectCurrentAuthor);
   const currQuote = useAppSelector(selectCurrentQuote);
   const tags = useAppSelector(selectCurrentTags);
+  const [toCall, setToCall] = useState(false);
   const { data, isLoading, isError } = useGetRandomQuoteQuery(
-    { tags: tags, toCall: true },
+    { tags: tags },
     {
+      skip: !toCall,
       refetchOnFocus: false,
       refetchOnMountOrArgChange: false,
       refetchOnReconnect: false,
@@ -52,25 +54,37 @@ export const RandomQuote = memo(() => {
         author: String(localStorage.getItem("currAuthor")),
       };
       setDataInStore(data);
-    } else if (data) {
-      setDataInLocalStorage(data[0]);
-      setDataInStore(data[0]);
+    } else {
+      setToCall(true);
     }
   }, [currId, data, dispatch, setDataInLocalStorage, setDataInStore]);
+
+  useEffect(() => {
+    if (toCall) {
+      if (data) {
+        console.log("Check");
+        setDataInLocalStorage(data[0]);
+        setDataInStore(data[0]);
+      }
+      return () => {
+        setToCall(false);
+      };
+    }
+  }, [data, setDataInLocalStorage, setDataInStore, toCall]);
 
   return (
     <div className="flex flex-col text-center p-3 w-3/4 card-background pt-7 pb-7 border-custom h-64 justify-between">
       <div className="text-3xl">
         <div className="text-3xl">
           {isLoading && <p>Loading...</p>}
-          {isError && <p>Error Occurred</p>}
-          {data && <p>{currQuote}</p>}
+          {isError ? <p>Error Occurred</p> : null}
+          {<p>{currQuote}</p>}
         </div>
       </div>
       <div className="flex flex-row justify-center text-xl relative">
         {isLoading && <p>Loading...</p>}
-        {isError && <p>Error Occurred</p>}
-        {data && <p>{`-${currAuthor}`}</p>}
+        {isError ? <p>Error Occurred</p> : null}
+        {<p>{`-${currAuthor}`}</p>}
         <button className="absolute self-center right-1/4">
           <img src="/bookmark.svg" />
         </button>

@@ -15,5 +15,4 @@ export interface TagType {
 
 export interface RandomQuoteParam {
   tags: string[];
-  toCall: boolean;
 }

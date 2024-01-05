@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect } from "react";
 import { useGetRandomQuoteQuery } from "./apiSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
@@ -6,7 +6,9 @@ import {
   selectCurrentId,
   selectCurrentQuote,
   selectCurrentTags,
+  selectForceRefetch,
   setAuthor,
+  setForceRefetch,
   setId,
   setQuote,
 } from "./quoteSlice";
@@ -17,17 +19,22 @@ export const RandomQuote = memo(() => {
   const currId = useAppSelector(selectCurrentId);
   const currAuthor = useAppSelector(selectCurrentAuthor);
   const currQuote = useAppSelector(selectCurrentQuote);
+  const forceRefetch = useAppSelector(selectForceRefetch);
   const tags = useAppSelector(selectCurrentTags);
-  const [toCall, setToCall] = useState(false);
-  const { data, isLoading, isError } = useGetRandomQuoteQuery(
+  const { data, isLoading, isError, refetch } = useGetRandomQuoteQuery(
     { tags: tags },
     {
-      skip: !toCall,
       refetchOnFocus: false,
       refetchOnMountOrArgChange: false,
       refetchOnReconnect: false,
     }
   );
+
+  useEffect(() => {
+    if (forceRefetch) {
+      refetch();
+    }
+  }, [dispatch, forceRefetch, refetch]);
 
   const setDataInStore = useCallback(
     (data: QuoteType) => {
@@ -47,7 +54,7 @@ export const RandomQuote = memo(() => {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("currId")) {
+    if (localStorage.getItem("currId") && !forceRefetch) {
       const data = {
         _id: String(localStorage.getItem("currId")),
         content: String(localStorage.getItem("currContent")),
@@ -55,35 +62,37 @@ export const RandomQuote = memo(() => {
       };
       setDataInStore(data);
     } else {
-      setToCall(true);
-    }
-  }, [currId, data, dispatch, setDataInLocalStorage, setDataInStore]);
-
-  useEffect(() => {
-    if (toCall) {
-      if (data) {
-        console.log("Check");
-        setDataInLocalStorage(data[0]);
-        setDataInStore(data[0]);
+      if (data || forceRefetch) {
+        if (data) {
+          setDataInLocalStorage(data[0]);
+          setDataInStore(data[0]);
+        }
+        return () => {
+          dispatch(setForceRefetch(false));
+        };
       }
-      return () => {
-        setToCall(false);
-      };
     }
-  }, [data, setDataInLocalStorage, setDataInStore, toCall]);
+  }, [
+    currId,
+    data,
+    dispatch,
+    forceRefetch,
+    setDataInLocalStorage,
+    setDataInStore,
+  ]);
 
   return (
     <div className="flex flex-col text-center p-3 w-3/4 card-background pt-7 pb-7 border-custom h-64 justify-between">
       <div className="text-3xl">
         <div className="text-3xl">
-          {isLoading && <p>Loading...</p>}
-          {isError ? <p>Error Occurred</p> : null}
+          {isLoading && !currQuote ? <p>Loading...</p> : null}
+          {isError && !currQuote ? <p>Error Occurred</p> : null}
           {<p>{currQuote}</p>}
         </div>
       </div>
       <div className="flex flex-row justify-center text-xl relative">
-        {isLoading && <p>Loading...</p>}
-        {isError ? <p>Error Occurred</p> : null}
+        {isLoading && !currAuthor ? <p>Loading...</p> : null}
+        {isError && !currAuthor ? <p>Error Occurred</p> : null}
         {<p>{`-${currAuthor}`}</p>}
         <button className="absolute self-center right-1/4">
           <img src="/bookmark.svg" />

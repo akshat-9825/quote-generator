@@ -7,6 +7,7 @@ interface InitialStateType {
   quote: string;
   author: string;
   tags: string[];
+  forceRefetch: boolean;
 }
 
 // Define the initial state using that type
@@ -15,6 +16,7 @@ const initialState: InitialStateType = {
   quote: "",
   author: "",
   tags: [],
+  forceRefetch: false,
 };
 
 export const quoteSlice = createSlice({
@@ -33,14 +35,20 @@ export const quoteSlice = createSlice({
     setNewTag: (state, action: PayloadAction<string>) => {
       state.tags = [...state.tags, action.payload];
     },
+    setForceRefetch: (state, action: PayloadAction<boolean>) => {
+      state.forceRefetch = action.payload;
+    },
   },
 });
 
-export const { setId, setAuthor, setQuote, setNewTag } = quoteSlice.actions;
+export const { setId, setAuthor, setQuote, setNewTag, setForceRefetch } =
+  quoteSlice.actions;
 
 export const selectCurrentId = (state: RootState) => state.quotes.id;
 export const selectCurrentQuote = (state: RootState) => state.quotes.quote;
 export const selectCurrentAuthor = (state: RootState) => state.quotes.author;
 export const selectCurrentTags = (state: RootState) => state.quotes.tags;
+export const selectForceRefetch = (state: RootState) =>
+  state.quotes.forceRefetch;
 
 export default quoteSlice.reducer;

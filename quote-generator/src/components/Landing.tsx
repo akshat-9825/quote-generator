@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { RandomQuote } from "./Quotes";
+import { useAppDispatch } from "../hooks";
 import { useGetTagsQuery } from "./apiSlice";
+import { setForceRefetch } from "./quoteSlice";
 
 import "./Landing.css";
 
 const LandingPage = () => {
+  const dispatch = useAppDispatch();
   const { data: tags, isLoading } = useGetTagsQuery(null);
 
   return (
@@ -30,7 +33,11 @@ const LandingPage = () => {
               ))}
           </select>
         </div>
-        <button className="mt-20 border-custom text-2xl w-64 text-center bg-green-600 p-1">
+        <button
+          onClick={() => {
+            dispatch(setForceRefetch(true));
+          }}
+          className="mt-20 border-custom text-2xl w-64 text-center bg-green-600 p-1">
           Next Quote
         </button>
       </div>

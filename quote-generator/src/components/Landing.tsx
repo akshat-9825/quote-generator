@@ -1,10 +1,10 @@
+import cn from "classnames";
 import { Link } from "react-router-dom";
 import { BookmarksContent } from "./BookmarksContent";
 import { LandingProps } from "./types";
 import { HomeContent } from "./HomeContent";
 
 import "./Landing.css";
-import classNames from "classnames";
 
 const LandingPage = ({ type }: LandingProps) => {
   return (
@@ -12,7 +12,7 @@ const LandingPage = ({ type }: LandingProps) => {
       <div className="flex flex-row w-full justify-between text-2xl px-16 pt-6">
         <Link to="/home">
           <div
-            className={classNames({
+            className={cn({
               ["text-bold"]: type === "home",
             })}>
             Home
@@ -20,7 +20,7 @@ const LandingPage = ({ type }: LandingProps) => {
         </Link>
         <Link to="/bookmarks">
           <div
-            className={classNames({
+            className={cn({
               ["text-bold"]: type === "bookmarks",
             })}>
             Bookmarks

@@ -16,3 +16,7 @@ export interface TagType {
 export interface RandomQuoteParam {
   tags: string[];
 }
+
+export interface LandingProps {
+  type: "home" | "bookmarks";
+}

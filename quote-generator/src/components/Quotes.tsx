@@ -11,8 +11,10 @@ import {
   setForceRefetch,
   setId,
   setQuote,
+  setNewBookmarkQuotes,
 } from "./quoteSlice";
 import { QuoteType } from "./types";
+import { QuoteCard } from "./QuoteCard";
 
 export const RandomQuote = memo(() => {
   const dispatch = useAppDispatch();
@@ -45,6 +47,27 @@ export const RandomQuote = memo(() => {
     },
     [dispatch]
   );
+
+  const bookmarkQuote = useCallback(() => {
+    const data = {
+      _id: currId,
+      content: currQuote,
+      author: currAuthor,
+    };
+    const bookMarkedQuotes = localStorage.bookmarkedQuotes
+      ? JSON.parse(localStorage.bookmarkedQuotes)
+      : [];
+
+    const isQuoteExists = bookMarkedQuotes.some(
+      (quote: QuoteType) => quote._id === currId
+    );
+    if (isQuoteExists) {
+      return;
+    }
+    bookMarkedQuotes.push(data);
+    localStorage.setItem("bookmarkedQuotes", JSON.stringify(bookMarkedQuotes));
+    dispatch(setNewBookmarkQuotes(data));
+  }, [currAuthor, currId, currQuote, dispatch]);
 
   const setDataInLocalStorage = useCallback((data: QuoteType) => {
     const { _id: id, content, author } = data;
@@ -82,22 +105,13 @@ export const RandomQuote = memo(() => {
   ]);
 
   return (
-    <div className="flex flex-col text-center p-3 w-3/4 card-background pt-7 pb-7 border-custom h-64 justify-between">
-      <div className="text-3xl">
-        <div className="text-3xl">
-          {isLoading && !currQuote ? <p>Loading...</p> : null}
-          {isError && !currQuote ? <p>Error Occurred</p> : null}
-          {<p>{currQuote}</p>}
-        </div>
-      </div>
-      <div className="flex flex-row justify-center text-xl relative">
-        {isLoading && !currAuthor ? <p>Loading...</p> : null}
-        {isError && !currAuthor ? <p>Error Occurred</p> : null}
-        {<p>{`-${currAuthor}`}</p>}
-        <button className="absolute self-center right-1/4">
-          <img src="/bookmark.svg" />
-        </button>
-      </div>
-    </div>
+    <QuoteCard
+      isError={isError}
+      isLoading={isLoading}
+      author={currAuthor}
+      quote={currQuote}
+      bookmarkQuote={bookmarkQuote}
+      isBookmarkVisible
+    />
   );
 });

@@ -7,9 +7,9 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route index path="/" element={<LandingPage />} />
-          <Route path="/home" element={<LandingPage />} />
-          <Route path="/bookmarks" element={<LandingPage />} />
+          <Route index path="/" element={<LandingPage type="home" />} />
+          <Route path="/home" element={<LandingPage type="home" />} />
+          <Route path="/bookmarks" element={<LandingPage type="bookmarks" />} />
           <Route path="*" element={<> No page </>} />
         </Routes>
       </BrowserRouter>

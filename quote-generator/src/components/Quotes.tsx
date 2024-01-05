@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useGetRandomQuoteQuery } from "./apiSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
@@ -15,6 +15,7 @@ import {
 } from "./quoteSlice";
 import { QuoteType } from "./types";
 import { QuoteCard } from "./QuoteCard";
+import classNames from "classnames";
 
 export const RandomQuote = memo(() => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ export const RandomQuote = memo(() => {
   const currQuote = useAppSelector(selectCurrentQuote);
   const forceRefetch = useAppSelector(selectForceRefetch);
   const tags = useAppSelector(selectCurrentTags);
+  const [showBookmarkToast, setShowBookmarkToast] = useState(false);
   const { data, isLoading, isError, refetch } = useGetRandomQuoteQuery(
     { tags: tags },
     {
@@ -72,6 +74,10 @@ export const RandomQuote = memo(() => {
     if (isQuoteExists) {
       return;
     }
+    setShowBookmarkToast(true);
+    setTimeout(() => {
+      setShowBookmarkToast(false);
+    }, 2000);
     bookMarkedQuotes.push(data);
     localStorage.setItem("bookmarkedQuotes", JSON.stringify(bookMarkedQuotes));
     dispatch(setNewBookmarkQuotes(data));
@@ -121,13 +127,25 @@ export const RandomQuote = memo(() => {
   ]);
 
   return (
-    <QuoteCard
-      isError={isError}
-      isLoading={isLoading}
-      author={currAuthor}
-      quote={currQuote}
-      bookmarkQuote={bookmarkQuote}
-      isBookmarkVisible
-    />
+    <div className="flex flex-col justify-center items-center">
+      <QuoteCard
+        isError={isError}
+        isLoading={isLoading}
+        author={currAuthor}
+        quote={currQuote}
+        bookmarkQuote={bookmarkQuote}
+        isBookmarkVisible
+      />
+      {showBookmarkToast ? (
+        <div
+          className={classNames("toast absolute toast-top toast-center", {
+            ["animate-fade"]: showBookmarkToast,
+          })}>
+          <div className="alert alert-success">
+            <span>Bookmarked successfully.</span>
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 });
